@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+    <RootNamespace>Selective_Loot_and_Transfer_Plugin</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Composition.AttributedModel" Version="*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ArchiSteamFarm\ArchiSteamFarm\ArchiSteamFarm.csproj" />
+  </ItemGroup>
+</Project>
