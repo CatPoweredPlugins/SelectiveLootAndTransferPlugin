@@ -13,7 +13,7 @@ namespace Selective_Loot_and_Transfer_Plugin
     [Export(typeof(IPlugin))]
     public class Class1 : IBotCommand
     {
-        string IPlugin.Name => nameof(Class1);
+        string IPlugin.Name => "Selective Loot and Transfer Plugin";
         Version IPlugin.Version => typeof(Class1).Assembly.GetName().Version;
         async Task<string> IBotCommand.OnBotCommand(Bot bot, ulong steamID, string message, string[] args)
         {
