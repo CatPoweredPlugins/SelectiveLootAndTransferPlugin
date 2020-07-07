@@ -52,7 +52,7 @@ For example, in order to send trading cards and foils from `MyBot` to `MyMain`, 
 Команда | Доступ | Описание
 --- | --- | ---
 `transfer# <Bots> <Modes> <Bot>` | `Master` | Отправляет боту `Bot` от заданных ботов все предметы инвентаря, соответствующие `modes`, описанным **[ниже](#user-content-параметр-modes)**.
-`loot# <Bots> <Modes>` | `Master` | Отправляет все предметы инвентаря, соответствующие `modes`, описанным **[ниже](#user-content-Параметр-modes)**, от заданных ботов к их `Master` заданному в `SteamUserPermissions` (с самым меньшим steamID, если их больше одного).
+`loot# <Bots> <Modes>` | `Master` | Отправляет все предметы инвентаря, соответствующие `modes`, описанным **[ниже](#user-content-параметр-modes)**, от заданных ботов к их `Master` заданному в `SteamUserPermissions` (с самым меньшим steamID, если их больше одного).
 
 
 ## Параметр `Modes`
