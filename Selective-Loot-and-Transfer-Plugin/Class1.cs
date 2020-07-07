@@ -147,7 +147,7 @@ namespace Selective_Loot_and_Transfer_Plugin
                 return ASF.IsOwner(steamID) ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
             }
 
-            IEnumerable<Task<string>> tasks = bots.Select(bot => ResponseTransfer(bot, steamID, mode, botNameTo));
+            IEnumerable<Task<string>> tasks = bots.Select(curbot => ResponseTransfer(curbot, steamID, mode, botNameTo));
             ICollection<string> results;
 
             switch (ASF.GlobalConfig.OptimizationMode)
@@ -269,7 +269,7 @@ namespace Selective_Loot_and_Transfer_Plugin
                 return ASF.IsOwner(steamID) ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
             }
 
-            IList<string> results = await Utilities.InParallel(bots.Select(bot => ResponseLoot(bot, steamID, mode))).ConfigureAwait(false);
+            IList<string> results = await Utilities.InParallel(bots.Select(curbot => ResponseLoot(curbot, steamID, mode))).ConfigureAwait(false);
 
             List<string> responses = new List<string>(results.Where(result => !string.IsNullOrEmpty(result)));
 
