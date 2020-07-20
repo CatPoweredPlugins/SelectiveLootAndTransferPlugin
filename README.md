@@ -32,7 +32,7 @@ Unknown | U | Every type that doesn't fit in any of the above
 
 For example, in order to send trading cards and foils from `MyBot` to `MyMain`, you'd execute:
 
-`transfer MyBot C,F MyMain`
+`transfer# MyBot C,F MyMain`
 
 ---
 
@@ -71,7 +71,7 @@ For example, in order to send trading cards and foils from `MyBot` to `MyMain`, 
 
 Например, чтобы передать обычные и металлические коллекционные карточки от бота `MyBot` боту `MyMain`, вы используете команду:
 
-`transfer MyBot C,F MyMain`
+`transfer# MyBot C,F MyMain`
 
 
 ![downloads](https://img.shields.io/github/downloads/Ryzhehvost/Selective-Loot-and-Transfer-Plugin/total.svg?style=social)
