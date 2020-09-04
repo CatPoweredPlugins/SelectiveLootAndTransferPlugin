@@ -12,8 +12,8 @@ namespace Selective_Loot_and_Transfer_Plugin {
 	[Export(typeof(IPlugin))]
 	public class Class1 : IBotCommand {
 		public string Name => "Selective Loot and Transfer Plugin";
-		public Version Version => typeof(Class1).Assembly.GetName().Version;
-		async Task<string> IBotCommand.OnBotCommand(Bot bot, ulong steamID, string message, string[] args) {
+		public Version Version => typeof(Class1).Assembly.GetName().Version ?? new Version("0");
+		async Task<string?> IBotCommand.OnBotCommand(Bot bot, ulong steamID, string message, string[] args) {
 			if (!bot.HasPermission(steamID, BotConfig.EPermission.Master)) {
 				return null;
 			}
@@ -35,7 +35,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 
 		void IPlugin.OnLoaded() => ASF.ArchiLogger.LogGenericInfo("Selective Loot and Transfer Plugin by Ryzhehvost, powered by ginger cats");
 
-		private static async Task<string> ResponseTransfer(Bot bot, ulong steamID, string mode, string botNameTo) {
+		private static async Task<string?> ResponseTransfer(Bot bot, ulong steamID, string mode, string botNameTo) {
 			if ((steamID == 0) || string.IsNullOrEmpty(botNameTo) || string.IsNullOrEmpty(mode)) {
 				ASF.ArchiLogger.LogNullError(nameof(steamID) + " || " + nameof(mode) + " || " + nameof(botNameTo));
 				return null;
@@ -49,7 +49,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return bot.Commands.FormatBotResponse(ArchiSteamFarm.Localization.Strings.BotNotConnected);
 			}
 
-			Bot targetBot = Bot.GetBot(botNameTo);
+			Bot? targetBot = Bot.GetBot(botNameTo);
 			if (targetBot == null) {
 				return ASF.IsOwner(steamID) ? bot.Commands.FormatBotResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNameTo)) : null;
 			}
@@ -74,7 +74,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				switch (singleMode.ToUpper()) {
 					case "A":
 					case "ALL":
-						foreach (ArchiSteamFarm.Json.Steam.Asset.EType type in Enum.GetValues(typeof(ArchiSteamFarm.Json.Steam.Asset.EType))) {
+						foreach (ArchiSteamFarm.Json.Steam.Asset.EType type in (ArchiSteamFarm.Json.Steam.Asset.EType[]) Enum.GetValues(typeof(ArchiSteamFarm.Json.Steam.Asset.EType))) {
 							transferTypes.Add(type);
 						}
 
@@ -117,24 +117,24 @@ namespace Selective_Loot_and_Transfer_Plugin {
 			return bot.Commands.FormatBotResponse(success ? message : string.Format(ArchiSteamFarm.Localization.Strings.WarningFailedWithError, message));
 		}
 
-		private static async Task<string> ResponseTransfer(ulong steamID, string botNames, string mode, string botNameTo) {
+		private static async Task<string?> ResponseTransfer(ulong steamID, string botNames, string mode, string botNameTo) {
 			if ((steamID == 0) || string.IsNullOrEmpty(botNames) || string.IsNullOrEmpty(mode) || string.IsNullOrEmpty(botNameTo)) {
 				ASF.ArchiLogger.LogNullError(nameof(steamID) + " || " + nameof(botNames) + " || " + nameof(mode) + " || " + nameof(botNameTo));
 				return null;
 			}
 
-			HashSet<Bot> bots = Bot.GetBots(botNames);
+			HashSet<Bot>? bots = Bot.GetBots(botNames);
 			if ((bots == null) || (bots.Count == 0)) {
 				return ASF.IsOwner(steamID) ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
 			}
 
-			IEnumerable<Task<string>> tasks = bots.Select(curbot => ResponseTransfer(curbot, steamID, mode, botNameTo));
-			ICollection<string> results;
+			IEnumerable<Task<string?>> tasks = bots.Select(curbot => ResponseTransfer(curbot, steamID, mode, botNameTo));
+			ICollection<string?> results;
 
-			switch (ASF.GlobalConfig.OptimizationMode) {
+			switch (ASF.GlobalConfig?.OptimizationMode) {
 				case GlobalConfig.EOptimizationMode.MinMemoryUsage:
-					results = new List<string>(bots.Count);
-					foreach (Task<string> task in tasks) {
+					results = new List<string?>(bots.Count);
+					foreach (Task<string?> task in tasks) {
 						results.Add(await task.ConfigureAwait(false));
 					}
 
@@ -144,11 +144,11 @@ namespace Selective_Loot_and_Transfer_Plugin {
 					break;
 			}
 
-			List<string> responses = new List<string>(results.Where(result => !string.IsNullOrEmpty(result)));
+			List<string?> responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
 			return responses.Count > 0 ? string.Join("", responses) : null;
 		}
 
-		private static async Task<string> ResponseLoot(Bot bot, ulong steamID, string mode) {
+		private static async Task<string?> ResponseLoot(Bot bot, ulong steamID, string mode) {
 			if (steamID == 0) {
 				bot.ArchiLogger.LogNullError(nameof(steamID));
 
@@ -179,7 +179,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				switch (singleMode.ToUpper()) {
 					case "A":
 					case "ALL":
-						foreach (ArchiSteamFarm.Json.Steam.Asset.EType type in Enum.GetValues(typeof(ArchiSteamFarm.Json.Steam.Asset.EType))) {
+						foreach (ArchiSteamFarm.Json.Steam.Asset.EType type in (ArchiSteamFarm.Json.Steam.Asset.EType[]) Enum.GetValues(typeof(ArchiSteamFarm.Json.Steam.Asset.EType))) {
 							transferTypes.Add(type);
 						}
 
@@ -223,22 +223,22 @@ namespace Selective_Loot_and_Transfer_Plugin {
 		}
 
 
-		private static async Task<string> ResponseLoot(ulong steamID, string botNames, string mode) {
+		private static async Task<string?> ResponseLoot(ulong steamID, string botNames, string mode) {
 			if ((steamID == 0) || string.IsNullOrEmpty(botNames)) {
 				ASF.ArchiLogger.LogNullError(nameof(steamID) + " || " + nameof(botNames));
 
 				return null;
 			}
 
-			HashSet<Bot> bots = Bot.GetBots(botNames);
+			HashSet<Bot>? bots = Bot.GetBots(botNames);
 
 			if ((bots == null) || (bots.Count == 0)) {
 				return ASF.IsOwner(steamID) ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
 			}
 
-			IList<string> results = await Utilities.InParallel(bots.Select(curbot => ResponseLoot(curbot, steamID, mode))).ConfigureAwait(false);
+			IList<string?> results = await Utilities.InParallel(bots.Select(curbot => ResponseLoot(curbot, steamID, mode))).ConfigureAwait(false);
 
-			List<string> responses = new List<string>(results.Where(result => !string.IsNullOrEmpty(result)));
+			List<string?> responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
 
 			return responses.Count > 0 ? string.Join(Environment.NewLine, responses) : null;
 		}
