@@ -14,7 +14,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 		public string Name => "Selective Loot and Transfer Plugin";
 		public Version Version => typeof(Class1).Assembly.GetName().Version ?? new Version("0");
 		async Task<string?> IBotCommand.OnBotCommand(Bot bot, ulong steamID, string message, string[] args) {
-			if (!bot.HasPermission(steamID, BotConfig.EPermission.Master)) {
+			if (!bot.HasAccess(steamID, BotConfig.EAccess.Master)) {
 				return null;
 			}
 
@@ -41,7 +41,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return null;
 			}
 
-			if (!bot.HasPermission(steamID, BotConfig.EPermission.Master)) {
+			if (!bot.HasAccess(steamID, BotConfig.EAccess.Master)) {
 				return null;
 			}
 
@@ -155,7 +155,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return null;
 			}
 
-			if (!bot.HasPermission(steamID, BotConfig.EPermission.Master)) {
+			if (!bot.HasAccess(steamID, BotConfig.EAccess.Master)) {
 				return null;
 			}
 
