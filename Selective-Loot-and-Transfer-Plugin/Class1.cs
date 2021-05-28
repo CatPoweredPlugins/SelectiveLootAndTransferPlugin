@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using ArchiSteamFarm;
-using ArchiSteamFarm.Plugins;
+using ArchiSteamFarm.Core;
+using ArchiSteamFarm.Steam;
+using ArchiSteamFarm.Steam.Data;
+using ArchiSteamFarm.Steam.Interaction;
+using ArchiSteamFarm.Steam.Storage;
+using ArchiSteamFarm.Storage;
+using ArchiSteamFarm.Plugins.Interfaces;
 using JetBrains.Annotations;
 
 
@@ -68,44 +73,44 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return bot.Commands.FormatBotResponse(string.Format(ArchiSteamFarm.Localization.Strings.ErrorIsEmpty, nameof(modes)));
 			}
 
-			HashSet<ArchiSteamFarm.Json.Steam.Asset.EType> transferTypes = new HashSet<ArchiSteamFarm.Json.Steam.Asset.EType>();
+			HashSet<Asset.EType> transferTypes = new HashSet<Asset.EType>();
 
 			foreach (string singleMode in modes) {
 				switch (singleMode.ToUpper()) {
 					case "A":
 					case "ALL":
-						foreach (ArchiSteamFarm.Json.Steam.Asset.EType type in (ArchiSteamFarm.Json.Steam.Asset.EType[]) Enum.GetValues(typeof(ArchiSteamFarm.Json.Steam.Asset.EType))) {
+						foreach (Asset.EType type in (Asset.EType[]) Enum.GetValues(typeof(Asset.EType))) {
 							transferTypes.Add(type);
 						}
 
 						break;
 					case "BG":
 					case "BACKGROUND":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.ProfileBackground);
+						transferTypes.Add(Asset.EType.ProfileBackground);
 						break;
 					case "BO":
 					case "BOOSTER":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.BoosterPack);
+						transferTypes.Add(Asset.EType.BoosterPack);
 						break;
 					case "C":
 					case "CARD":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.TradingCard);
+						transferTypes.Add(Asset.EType.TradingCard);
 						break;
 					case "E":
 					case "EMOTICON":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.Emoticon);
+						transferTypes.Add(Asset.EType.Emoticon);
 						break;
 					case "F":
 					case "FOIL":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.FoilTradingCard);
+						transferTypes.Add(Asset.EType.FoilTradingCard);
 						break;
 					case "G":
 					case "GEMS":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.SteamGems);
+						transferTypes.Add(Asset.EType.SteamGems);
 						break;
 					case "U":
 					case "UNKNOWN":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.Unknown);
+						transferTypes.Add(Asset.EType.Unknown);
 						break;
 					default:
 						return bot.Commands.FormatBotResponse(string.Format(ArchiSteamFarm.Localization.Strings.ErrorIsInvalid, mode));
@@ -173,44 +178,44 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return bot.Commands.FormatBotResponse(string.Format(ArchiSteamFarm.Localization.Strings.ErrorIsEmpty, nameof(modes)));
 			}
 
-			HashSet<ArchiSteamFarm.Json.Steam.Asset.EType> transferTypes = new HashSet<ArchiSteamFarm.Json.Steam.Asset.EType>();
+			HashSet<Asset.EType> transferTypes = new HashSet<Asset.EType>();
 
 			foreach (string singleMode in modes) {
 				switch (singleMode.ToUpper()) {
 					case "A":
 					case "ALL":
-						foreach (ArchiSteamFarm.Json.Steam.Asset.EType type in (ArchiSteamFarm.Json.Steam.Asset.EType[]) Enum.GetValues(typeof(ArchiSteamFarm.Json.Steam.Asset.EType))) {
+						foreach (Asset.EType type in (Asset.EType[]) Enum.GetValues(typeof(Asset.EType))) {
 							transferTypes.Add(type);
 						}
 
 						break;
 					case "BG":
 					case "BACKGROUND":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.ProfileBackground);
+						transferTypes.Add(Asset.EType.ProfileBackground);
 						break;
 					case "BO":
 					case "BOOSTER":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.BoosterPack);
+						transferTypes.Add(Asset.EType.BoosterPack);
 						break;
 					case "C":
 					case "CARD":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.TradingCard);
+						transferTypes.Add(Asset.EType.TradingCard);
 						break;
 					case "E":
 					case "EMOTICON":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.Emoticon);
+						transferTypes.Add(Asset.EType.Emoticon);
 						break;
 					case "F":
 					case "FOIL":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.FoilTradingCard);
+						transferTypes.Add(Asset.EType.FoilTradingCard);
 						break;
 					case "G":
 					case "GEMS":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.SteamGems);
+						transferTypes.Add(Asset.EType.SteamGems);
 						break;
 					case "U":
 					case "UNKNOWN":
-						transferTypes.Add(ArchiSteamFarm.Json.Steam.Asset.EType.Unknown);
+						transferTypes.Add(Asset.EType.Unknown);
 						break;
 					default:
 						return bot.Commands.FormatBotResponse(string.Format(ArchiSteamFarm.Localization.Strings.ErrorIsInvalid, mode));
