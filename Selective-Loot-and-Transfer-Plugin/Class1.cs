@@ -32,6 +32,15 @@ namespace Selective_Loot_and_Transfer_Plugin {
 					return await ResponseLoot(steamID, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false);
 				case "LOOT#":
 					return await ResponseLoot(bot, steamID, args[1]).ConfigureAwait(false);
+				case "TRANSFERM" when args.Length > 3:
+					return await ResponseTransfer(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ","),false).ConfigureAwait(false);
+				case "TRANSFERM" when args.Length > 2:
+					return await ResponseTransfer(bot, steamID, args[1], args[2],false).ConfigureAwait(false);
+				case "LOOTM" when args.Length > 2:
+					return await ResponseLoot(steamID, args[1], Utilities.GetArgsAsText(args, 2, ","),false).ConfigureAwait(false);
+				case "LOOTM":
+					return await ResponseLoot(bot, steamID, args[1],false).ConfigureAwait(false);
+
 				default:
 					return null;
 			}
@@ -40,7 +49,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 
 		void IPlugin.OnLoaded() => ASF.ArchiLogger.LogGenericInfo("Selective Loot and Transfer Plugin by Ryzhehvost, powered by ginger cats");
 
-		private static async Task<string?> ResponseTransfer(Bot bot, ulong steamID, string mode, string botNameTo) {
+		private static async Task<string?> ResponseTransfer(Bot bot, ulong steamID, string mode, string botNameTo, bool sendNotMarketable = true) {
 			if ((steamID == 0) || string.IsNullOrEmpty(botNameTo) || string.IsNullOrEmpty(mode)) {
 				ASF.ArchiLogger.LogNullError(nameof(steamID) + " || " + nameof(mode) + " || " + nameof(botNameTo));
 				return null;
@@ -117,12 +126,12 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				}
 			}
 
-			(bool success, string message) = await bot.Actions.SendInventory(targetSteamID: targetBot.SteamID, filterFunction: item => transferTypes.Contains(item.Type)).ConfigureAwait(false);
+			(bool success, string message) = await bot.Actions.SendInventory(targetSteamID: targetBot.SteamID, filterFunction: item => transferTypes.Contains(item.Type)&&(sendNotMarketable||item.Marketable)).ConfigureAwait(false);
 
 			return bot.Commands.FormatBotResponse(success ? message : string.Format(ArchiSteamFarm.Localization.Strings.WarningFailedWithError, message));
 		}
 
-		private static async Task<string?> ResponseTransfer(ulong steamID, string botNames, string mode, string botNameTo) {
+		private static async Task<string?> ResponseTransfer(ulong steamID, string botNames, string mode, string botNameTo, bool sendNotMarketable = true) {
 			if ((steamID == 0) || string.IsNullOrEmpty(botNames) || string.IsNullOrEmpty(mode) || string.IsNullOrEmpty(botNameTo)) {
 				ASF.ArchiLogger.LogNullError(nameof(steamID) + " || " + nameof(botNames) + " || " + nameof(mode) + " || " + nameof(botNameTo));
 				return null;
@@ -133,7 +142,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return ASF.IsOwner(steamID) ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
 			}
 
-			IEnumerable<Task<string?>> tasks = bots.Select(curbot => ResponseTransfer(curbot, steamID, mode, botNameTo));
+			IEnumerable<Task<string?>> tasks = bots.Select(curbot => ResponseTransfer(curbot, steamID, mode, botNameTo,sendNotMarketable));
 			ICollection<string?> results;
 
 			switch (ASF.GlobalConfig?.OptimizationMode) {
@@ -153,7 +162,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 			return responses.Count > 0 ? string.Join("", responses) : null;
 		}
 
-		private static async Task<string?> ResponseLoot(Bot bot, ulong steamID, string mode) {
+		private static async Task<string?> ResponseLoot(Bot bot, ulong steamID, string mode, bool sendNotMarketable = true) {
 			if (steamID == 0) {
 				bot.ArchiLogger.LogNullError(nameof(steamID));
 
@@ -222,13 +231,13 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				}
 			}
 
-			(bool success, string message) = await bot.Actions.SendInventory(filterFunction: item => transferTypes.Contains(item.Type)).ConfigureAwait(false);
+			(bool success, string message) = await bot.Actions.SendInventory(filterFunction: item => transferTypes.Contains(item.Type)&&(sendNotMarketable||item.Marketable)).ConfigureAwait(false);
 
 			return bot.Commands.FormatBotResponse(success ? message : string.Format(ArchiSteamFarm.Localization.Strings.WarningFailedWithError, message));
 		}
 
 
-		private static async Task<string?> ResponseLoot(ulong steamID, string botNames, string mode) {
+		private static async Task<string?> ResponseLoot(ulong steamID, string botNames, string mode, bool sendNotMarketable = true) {
 			if ((steamID == 0) || string.IsNullOrEmpty(botNames)) {
 				ASF.ArchiLogger.LogNullError(nameof(steamID) + " || " + nameof(botNames));
 
@@ -241,7 +250,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return ASF.IsOwner(steamID) ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
 			}
 
-			IList<string?> results = await Utilities.InParallel(bots.Select(curbot => ResponseLoot(curbot, steamID, mode))).ConfigureAwait(false);
+			IList<string?> results = await Utilities.InParallel(bots.Select(curbot => ResponseLoot(curbot, steamID, mode,sendNotMarketable))).ConfigureAwait(false);
 
 			List<string?> responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
 
