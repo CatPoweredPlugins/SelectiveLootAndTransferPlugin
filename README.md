@@ -9,7 +9,8 @@ This plugin allows to send community inventory items of given types from bot to 
 - (re)start ASF, you should get a message indicating that plugin loaded successfully. 
 
 ## Usage
-Plugin implements two commands:
+Plugin implements following commands:
+
 Command | Access | Description
 --- | --- | ---
 `transfer# <Bots> <Modes> <Bot>` | `Master` | Sends from given bot instances to given `Bot` instance, all inventory items that are matching given `modes`, explained **[below](#modes-parameter)**.
@@ -52,7 +53,8 @@ You can get support for this plugin in https://steamcommunity.com/groups/Ryzhepl
 - (пере)запустите ASF, вы должны получить сообщение что плагин успешно загружен. 
 
 ## Использование
-Плагин реализует две команды:
+Плагин реализует следующие команды:
+
 Команда | Доступ | Описание
 --- | --- | ---
 `transfer# <Bots> <Modes> <Bot>` | `Master` | Отправляет боту `Bot` от заданных ботов все предметы инвентаря, соответствующие `modes`, описанным **[ниже](#user-content-параметр-modes)**.
