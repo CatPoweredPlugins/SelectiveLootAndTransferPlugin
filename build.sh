@@ -46,13 +46,13 @@ fi
 
 ## hacks to allow building netf
 if [[ $build_netf -eq 1 ]]; then
-    sed -i 's|<ItemGroup>|<ItemGroup Condition="'\''$(TargetFramework)'\'' == '\''net5.0'\''"><!--hacks-->|' $plugin_name/$plugin_name.csproj
+    sed -i 's|<ItemGroup>|<ItemGroup Condition="'\''$(TargetFramework)'\'' == '\''net6.0'\''"><!--hacks-->|' $plugin_name/$plugin_name.csproj
 fi
 
 ## release generic version
 dotnet restore
 sync
-dotnet publish -c "Release" -f net5.0 -o "out/generic" "/p:LinkDuringPublish=false"
+dotnet publish -c "Release" -f net6.0 -o "out/generic" "/p:LinkDuringPublish=false"
 mkdir ./out/$plugin_name
 cp ./out/generic/$plugin_name.dll ./out/$plugin_name
 7z a -tzip -mx7 ./out/$plugin_name.zip ./out/$plugin_name
@@ -60,7 +60,7 @@ rm -rf out/$plugin_name
 
 ## hacks to allow building netf
 if [[ $build_netf -eq 1 ]]; then
-    sed -i 's|<ItemGroup Condition="'\''$(TargetFramework)'\'' == '\''net5.0'\''"><!--hacks-->|<ItemGroup Condition="'\''$(TargetFramework)'\'' == '\''net48'\''"><!--hacks-->|' $plugin_name/$plugin_name.csproj
+    sed -i 's|<ItemGroup Condition="'\''$(TargetFramework)'\'' == '\''net6.0'\''"><!--hacks-->|<ItemGroup Condition="'\''$(TargetFramework)'\'' == '\''net48'\''"><!--hacks-->|' $plugin_name/$plugin_name.csproj
 fi
 
 ## release generic-netf version

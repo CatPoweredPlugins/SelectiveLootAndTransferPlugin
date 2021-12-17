@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Authors>Ryzhehvost</Authors>
-    <AssemblyVersion>0.0.3.0</AssemblyVersion>
-    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <AssemblyVersion>0.0.4.0</AssemblyVersion>
+    <TargetFrameworks>net6.0;net48</TargetFrameworks>
     <RootNamespace>Selective_Loot_and_Transfer_Plugin</RootNamespace>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>

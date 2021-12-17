@@ -23,31 +23,23 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return null;
 			}
 
-			switch (args[0].ToUpperInvariant()) {
-				case "TRANSFER#" when args.Length > 3:
-					return await ResponseTransfer(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false);
-				case "TRANSFER#" when args.Length > 2:
-					return await ResponseTransfer(bot, steamID, args[1], args[2]).ConfigureAwait(false);
-				case "LOOT#" when args.Length > 2:
-					return await ResponseLoot(steamID, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false);
-				case "LOOT#":
-					return await ResponseLoot(bot, steamID, args[1]).ConfigureAwait(false);
-				case "TRANSFERM" when args.Length > 3:
-					return await ResponseTransfer(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ","),false).ConfigureAwait(false);
-				case "TRANSFERM" when args.Length > 2:
-					return await ResponseTransfer(bot, steamID, args[1], args[2],false).ConfigureAwait(false);
-				case "LOOTM" when args.Length > 2:
-					return await ResponseLoot(steamID, args[1], Utilities.GetArgsAsText(args, 2, ","),false).ConfigureAwait(false);
-				case "LOOTM":
-					return await ResponseLoot(bot, steamID, args[1],false).ConfigureAwait(false);
-
-				default:
-					return null;
-			}
-
+			return args[0].ToUpperInvariant() switch {
+				"TRANSFER#" when args.Length > 3 => await ResponseTransfer(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false),
+				"TRANSFER#" when args.Length > 2 => await ResponseTransfer(bot, steamID, args[1], args[2]).ConfigureAwait(false),
+				"LOOT#" when args.Length > 2 => await ResponseLoot(steamID, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false),
+				"LOOT#" => await ResponseLoot(bot, steamID, args[1]).ConfigureAwait(false),
+				"TRANSFERM" when args.Length > 3 => await ResponseTransfer(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ","), false).ConfigureAwait(false),
+				"TRANSFERM" when args.Length > 2 => await ResponseTransfer(bot, steamID, args[1], args[2], false).ConfigureAwait(false),
+				"LOOTM" when args.Length > 2 => await ResponseLoot(steamID, args[1], Utilities.GetArgsAsText(args, 2, ","), false).ConfigureAwait(false),
+				"LOOTM" => await ResponseLoot(bot, steamID, args[1], false).ConfigureAwait(false),
+				_ => null,
+			};
 		}
 
-		void IPlugin.OnLoaded() => ASF.ArchiLogger.LogGenericInfo("Selective Loot and Transfer Plugin by Ryzhehvost, powered by ginger cats");
+		public Task OnLoaded() {
+			ASF.ArchiLogger.LogGenericInfo("Selective Loot and Transfer Plugin by Ryzhehvost, powered by ginger cats");
+			return Task.CompletedTask;
+		}
 
 		private static async Task<string?> ResponseTransfer(Bot bot, ulong steamID, string mode, string botNameTo, bool sendNotMarketable = true) {
 			if ((steamID == 0) || string.IsNullOrEmpty(botNameTo) || string.IsNullOrEmpty(mode)) {
@@ -82,7 +74,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return bot.Commands.FormatBotResponse(string.Format(ArchiSteamFarm.Localization.Strings.ErrorIsEmpty, nameof(modes)));
 			}
 
-			HashSet<Asset.EType> transferTypes = new HashSet<Asset.EType>();
+			HashSet<Asset.EType> transferTypes = new();
 
 			foreach (string singleMode in modes) {
 				switch (singleMode.ToUpper()) {
@@ -158,7 +150,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 					break;
 			}
 
-			List<string?> responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
+			List<string?> responses = new(results.Where(result => !string.IsNullOrEmpty(result)));
 			return responses.Count > 0 ? string.Join("", responses) : null;
 		}
 
@@ -187,7 +179,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return bot.Commands.FormatBotResponse(string.Format(ArchiSteamFarm.Localization.Strings.ErrorIsEmpty, nameof(modes)));
 			}
 
-			HashSet<Asset.EType> transferTypes = new HashSet<Asset.EType>();
+			HashSet<Asset.EType> transferTypes = new();
 
 			foreach (string singleMode in modes) {
 				switch (singleMode.ToUpper()) {
@@ -252,7 +244,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 
 			IList<string?> results = await Utilities.InParallel(bots.Select(curbot => ResponseLoot(curbot, steamID, mode,sendNotMarketable))).ConfigureAwait(false);
 
-			List<string?> responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
+			List<string?> responses = new(results.Where(result => !string.IsNullOrEmpty(result)));
 
 			return responses.Count > 0 ? string.Join(Environment.NewLine, responses) : null;
 		}
