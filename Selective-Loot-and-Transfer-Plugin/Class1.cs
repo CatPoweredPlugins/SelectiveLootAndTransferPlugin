@@ -24,14 +24,14 @@ namespace Selective_Loot_and_Transfer_Plugin {
 			}
 
 			return args[0].ToUpperInvariant() switch {
-				"TRANSFER#" when args.Length > 3 => await ResponseTransfer(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false),
-				"TRANSFER#" when args.Length > 2 => await ResponseTransfer(bot, steamID, args[1], args[2]).ConfigureAwait(false),
-				"LOOT#" when args.Length > 2 => await ResponseLoot(steamID, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false),
-				"LOOT#" => await ResponseLoot(bot, steamID, args[1]).ConfigureAwait(false),
-				"TRANSFERM" when args.Length > 3 => await ResponseTransfer(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ","), false).ConfigureAwait(false),
-				"TRANSFERM" when args.Length > 2 => await ResponseTransfer(bot, steamID, args[1], args[2], false).ConfigureAwait(false),
-				"LOOTM" when args.Length > 2 => await ResponseLoot(steamID, args[1], Utilities.GetArgsAsText(args, 2, ","), false).ConfigureAwait(false),
-				"LOOTM" => await ResponseLoot(bot, steamID, args[1], false).ConfigureAwait(false),
+				"TRANSFER#" when args.Length > 3 => await ResponseTransfer(access, steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false),
+				"TRANSFER#" when args.Length > 2 => await ResponseTransfer(bot, access, args[1], args[2]).ConfigureAwait(false),
+				"LOOT#" when args.Length > 2 => await ResponseLoot(access, steamID, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false),
+				"LOOT#" => await ResponseLoot(bot, access, args[1]).ConfigureAwait(false),
+				"TRANSFERM" when args.Length > 3 => await ResponseTransfer(access, steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ","), false).ConfigureAwait(false),
+				"TRANSFERM" when args.Length > 2 => await ResponseTransfer(bot, access, args[1], args[2], false).ConfigureAwait(false),
+				"LOOTM" when args.Length > 2 => await ResponseLoot(access, steamID, args[1], Utilities.GetArgsAsText(args, 2, ","), false).ConfigureAwait(false),
+				"LOOTM" => await ResponseLoot(bot, access, args[1], false).ConfigureAwait(false),
 				_ => null,
 			};
 		}
@@ -41,13 +41,13 @@ namespace Selective_Loot_and_Transfer_Plugin {
 			return Task.CompletedTask;
 		}
 
-		private static async Task<string?> ResponseTransfer(Bot bot, ulong steamID, string mode, string botNameTo, bool sendNotMarketable = true) {
-			if ((steamID == 0) || string.IsNullOrEmpty(botNameTo) || string.IsNullOrEmpty(mode)) {
-				ASF.ArchiLogger.LogNullError(nameof(steamID) + " || " + nameof(mode) + " || " + nameof(botNameTo));
+		private static async Task<string?> ResponseTransfer(Bot bot, EAccess access, string mode, string botNameTo, bool sendNotMarketable = true) {
+			if (string.IsNullOrEmpty(botNameTo) || string.IsNullOrEmpty(mode)) {
+				ASF.ArchiLogger.LogNullError(nameof(mode) + " || " + nameof(botNameTo));
 				return null;
 			}
 
-			if (bot.GetAccess(steamID) < EAccess.Master) {
+			if (access < EAccess.Master) {
 				return null;
 			}
 
@@ -57,7 +57,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 
 			Bot? targetBot = Bot.GetBot(botNameTo);
 			if (targetBot == null) {
-				return ASF.IsOwner(steamID) ? bot.Commands.FormatBotResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNameTo)) : null;
+				return access >= EAccess.Owner ? bot.Commands.FormatBotResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNameTo)) : null;
 			}
 
 			if (!targetBot.IsConnectedAndLoggedOn) {
@@ -123,18 +123,18 @@ namespace Selective_Loot_and_Transfer_Plugin {
 			return bot.Commands.FormatBotResponse(success ? message : string.Format(ArchiSteamFarm.Localization.Strings.WarningFailedWithError, message));
 		}
 
-		private static async Task<string?> ResponseTransfer(ulong steamID, string botNames, string mode, string botNameTo, bool sendNotMarketable = true) {
-			if ((steamID == 0) || string.IsNullOrEmpty(botNames) || string.IsNullOrEmpty(mode) || string.IsNullOrEmpty(botNameTo)) {
-				ASF.ArchiLogger.LogNullError(nameof(steamID) + " || " + nameof(botNames) + " || " + nameof(mode) + " || " + nameof(botNameTo));
+		private static async Task<string?> ResponseTransfer(EAccess access, ulong steamID, string botNames, string mode, string botNameTo, bool sendNotMarketable = true) {
+			if (string.IsNullOrEmpty(botNames) || string.IsNullOrEmpty(mode) || string.IsNullOrEmpty(botNameTo)) {
+				ASF.ArchiLogger.LogNullError(nameof(botNames) + " || " + nameof(mode) + " || " + nameof(botNameTo));
 				return null;
 			}
 
 			HashSet<Bot>? bots = Bot.GetBots(botNames);
 			if ((bots == null) || (bots.Count == 0)) {
-				return ASF.IsOwner(steamID) ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
+				return access >= EAccess.Owner ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
 			}
 
-			IEnumerable<Task<string?>> tasks = bots.Select(curbot => ResponseTransfer(curbot, steamID, mode, botNameTo,sendNotMarketable));
+			IEnumerable<Task<string?>> tasks = bots.Select(bot => ResponseTransfer(bot, Commands.GetProxyAccess(bot, access, steamID), mode, botNameTo, sendNotMarketable));
 			ICollection<string?> results;
 
 			switch (ASF.GlobalConfig?.OptimizationMode) {
@@ -154,14 +154,8 @@ namespace Selective_Loot_and_Transfer_Plugin {
 			return responses.Count > 0 ? string.Join("", responses) : null;
 		}
 
-		private static async Task<string?> ResponseLoot(Bot bot, ulong steamID, string mode, bool sendNotMarketable = true) {
-			if (steamID == 0) {
-				bot.ArchiLogger.LogNullError(nameof(steamID));
-
-				return null;
-			}
-
-			if (bot.GetAccess(steamID) < EAccess.Master) {
+		private static async Task<string?> ResponseLoot(Bot bot, EAccess access, string mode, bool sendNotMarketable = true) {
+			if (access < EAccess.Master) {
 				return null;
 			}
 
@@ -229,9 +223,9 @@ namespace Selective_Loot_and_Transfer_Plugin {
 		}
 
 
-		private static async Task<string?> ResponseLoot(ulong steamID, string botNames, string mode, bool sendNotMarketable = true) {
-			if ((steamID == 0) || string.IsNullOrEmpty(botNames)) {
-				ASF.ArchiLogger.LogNullError(nameof(steamID) + " || " + nameof(botNames));
+		private static async Task<string?> ResponseLoot(EAccess access, ulong steamID, string botNames, string mode, bool sendNotMarketable = true) {
+			if (string.IsNullOrEmpty(botNames)) {
+				ASF.ArchiLogger.LogNullError(nameof(botNames));
 
 				return null;
 			}
@@ -239,10 +233,10 @@ namespace Selective_Loot_and_Transfer_Plugin {
 			HashSet<Bot>? bots = Bot.GetBots(botNames);
 
 			if ((bots == null) || (bots.Count == 0)) {
-				return ASF.IsOwner(steamID) ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
+				return access >= EAccess.Owner ? Commands.FormatStaticResponse(string.Format(ArchiSteamFarm.Localization.Strings.BotNotFound, botNames)) : null;
 			}
 
-			IList<string?> results = await Utilities.InParallel(bots.Select(curbot => ResponseLoot(curbot, steamID, mode,sendNotMarketable))).ConfigureAwait(false);
+			IList<string?> results = await Utilities.InParallel(bots.Select(bot => ResponseLoot(bot, Commands.GetProxyAccess(bot, access, steamID), mode, sendNotMarketable))).ConfigureAwait(false);
 
 			List<string?> responses = new(results.Where(result => !string.IsNullOrEmpty(result)));
 
