@@ -15,11 +15,11 @@ using JetBrains.Annotations;
 
 namespace Selective_Loot_and_Transfer_Plugin {
 	[Export(typeof(IPlugin))]
-	public class Class1 : IBotCommand {
+	public class Class1 : IBotCommand2 {
 		public string Name => "Selective Loot and Transfer Plugin";
 		public Version Version => typeof(Class1).Assembly.GetName().Version ?? new Version("0");
-		async Task<string?> IBotCommand.OnBotCommand(Bot bot, ulong steamID, string message, string[] args) {
-			if (!bot.HasAccess(steamID, BotConfig.EAccess.Master)) {
+		async Task<string?> IBotCommand2.OnBotCommand(Bot bot, EAccess access, string message, string[] args, ulong steamID = 0) {
+			if (access < EAccess.Master) {
 				return null;
 			}
 
@@ -47,7 +47,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return null;
 			}
 
-			if (!bot.HasAccess(steamID, BotConfig.EAccess.Master)) {
+			if (bot.GetAccess(steamID) < EAccess.Master) {
 				return null;
 			}
 
@@ -161,7 +161,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 				return null;
 			}
 
-			if (!bot.HasAccess(steamID, BotConfig.EAccess.Master)) {
+			if (bot.GetAccess(steamID) < EAccess.Master) {
 				return null;
 			}
 
