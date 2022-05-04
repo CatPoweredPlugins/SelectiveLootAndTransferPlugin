@@ -18,7 +18,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 	public class Class1 : IBotCommand2 {
 		public string Name => "Selective Loot and Transfer Plugin";
 		public Version Version => typeof(Class1).Assembly.GetName().Version ?? new Version("0");
-		async Task<string?> IBotCommand2.OnBotCommand(Bot bot, EAccess access, string message, string[] args, ulong steamID = 0) {
+		public async Task<string?> OnBotCommand(Bot bot, EAccess access, string message, string[] args, ulong steamID = 0) {
 			if (access < EAccess.Master) {
 				return null;
 			}
@@ -43,7 +43,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 
 		private static async Task<string?> ResponseTransfer(Bot bot, EAccess access, string mode, string botNameTo, bool sendNotMarketable = true) {
 			if (string.IsNullOrEmpty(botNameTo) || string.IsNullOrEmpty(mode)) {
-				ASF.ArchiLogger.LogNullError(nameof(mode) + " || " + nameof(botNameTo));
+				ASF.ArchiLogger.LogNullError(null, nameof(mode) + " || " + nameof(botNameTo));
 				return null;
 			}
 
@@ -125,7 +125,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 
 		private static async Task<string?> ResponseTransfer(EAccess access, ulong steamID, string botNames, string mode, string botNameTo, bool sendNotMarketable = true) {
 			if (string.IsNullOrEmpty(botNames) || string.IsNullOrEmpty(mode) || string.IsNullOrEmpty(botNameTo)) {
-				ASF.ArchiLogger.LogNullError(nameof(botNames) + " || " + nameof(mode) + " || " + nameof(botNameTo));
+				ASF.ArchiLogger.LogNullError(null, nameof(botNames) + " || " + nameof(mode) + " || " + nameof(botNameTo));
 				return null;
 			}
 
@@ -225,7 +225,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 
 		private static async Task<string?> ResponseLoot(EAccess access, ulong steamID, string botNames, string mode, bool sendNotMarketable = true) {
 			if (string.IsNullOrEmpty(botNames)) {
-				ASF.ArchiLogger.LogNullError(nameof(botNames));
+				ASF.ArchiLogger.LogNullError(null, nameof(botNames));
 
 				return null;
 			}
