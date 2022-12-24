@@ -45,7 +45,7 @@ You can get support for this plugin in https://steamcommunity.com/groups/Ryzhepl
 # Плагин для выборочных loot и transfer
 
 # Введение
-Этот палгин позволяет отправлять предметы заданных типов из инвенаря сообщества от заданных ботов другому боту или аккаунту, указанному как `Master`.
+Этот плагин позволяет отправлять предметы заданных типов из инвенаря сообщества от заданных ботов другому боту или аккаунту, указанному как `Master`.
 
 ## Установка
 - скачайте файл .zip из [последнего релиза](https://github.com/Ryzhehvost/Selective-Loot-and-Transfer-Plugin/releases/latest), в большинстве случаев вам нужен файл `Selective-Loot-and-Transfer-Plugin.zip`, не если вы по какой-то причине пользуетесь ASF-generic-netf.zip (а для этого нужны веские причины) - скачайте `Selective-Loot-and-Transfer-Plugin-netf.zip`.
