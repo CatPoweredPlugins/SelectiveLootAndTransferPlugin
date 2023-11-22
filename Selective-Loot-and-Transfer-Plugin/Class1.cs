@@ -37,7 +37,7 @@ namespace Selective_Loot_and_Transfer_Plugin {
 		}
 
 		public Task OnLoaded() {
-			ASF.ArchiLogger.LogGenericInfo("Selective Loot and Transfer Plugin by Ryzhehvost, powered by ginger cats");
+			ASF.ArchiLogger.LogGenericInfo("Selective Loot and Transfer Plugin by Rudokhvist, powered by ginger cats");
 			return Task.CompletedTask;
 		}
 
