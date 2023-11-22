@@ -4,7 +4,7 @@
 This plugin allows to send community inventory items of given types from bot to master or to another bot.
 
 ## Installation
-- download .zip file from [latest release](https://github.com/Ryzhehvost/Selective-Loot-and-Transfer-Plugin/releases/latest), in most cases you need `Selective-Loot-and-Transfer-Plugin.zip`, but if you use ASF-generic-netf.zip (you really need a strong reason to do that) download `Selective-Loot-and-Transfer-Plugin-netf.zip`.
+- download .zip file from [latest release](https://github.com/Rudokhvist/Selective-Loot-and-Transfer-Plugin/releases/latest), in most cases you need `Selective-Loot-and-Transfer-Plugin.zip`, but if you use ASF-generic-netf.zip (you really need a strong reason to do that) download `Selective-Loot-and-Transfer-Plugin-netf.zip`.
 - unpack downloaded .zip file to `plugins` folder inside your ASF folder.
 - (re)start ASF, you should get a message indicating that plugin loaded successfully. 
 
@@ -48,7 +48,7 @@ You can get support for this plugin in https://steamcommunity.com/groups/Ryzhepl
 Этот плагин позволяет отправлять предметы заданных типов из инвенаря сообщества от заданных ботов другому боту или аккаунту, указанному как `Master`.
 
 ## Установка
-- скачайте файл .zip из [последнего релиза](https://github.com/Ryzhehvost/Selective-Loot-and-Transfer-Plugin/releases/latest), в большинстве случаев вам нужен файл `Selective-Loot-and-Transfer-Plugin.zip`, не если вы по какой-то причине пользуетесь ASF-generic-netf.zip (а для этого нужны веские причины) - скачайте `Selective-Loot-and-Transfer-Plugin-netf.zip`.
+- скачайте файл .zip из [последнего релиза](https://github.com/Rudokhvist/Selective-Loot-and-Transfer-Plugin/releases/latest), в большинстве случаев вам нужен файл `Selective-Loot-and-Transfer-Plugin.zip`, не если вы по какой-то причине пользуетесь ASF-generic-netf.zip (а для этого нужны веские причины) - скачайте `Selective-Loot-and-Transfer-Plugin-netf.zip`.
 - распакуйте скачанный файл .zip в папку `plugins` внутри вашей папки с ASF.
 - (пере)запустите ASF, вы должны получить сообщение что плагин успешно загружен. 
 
@@ -84,4 +84,4 @@ You can get support for this plugin in https://steamcommunity.com/groups/Ryzhepl
 
 Помощь по этому плагину вы можете получить в https://steamcommunity.com/groups/Ryzheplugins (или просто используйте раздел issues)
 
-![downloads](https://img.shields.io/github/downloads/Ryzhehvost/Selective-Loot-and-Transfer-Plugin/total.svg?style=social)
+![downloads](https://img.shields.io/github/downloads/Rudokhvist/Selective-Loot-and-Transfer-Plugin/total.svg?style=social)
