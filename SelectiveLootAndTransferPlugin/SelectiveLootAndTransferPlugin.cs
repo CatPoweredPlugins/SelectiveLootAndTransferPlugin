@@ -23,7 +23,7 @@ namespace SelectiveLootAndTransferPlugin {
 	internal sealed class SelectiveLootAndTransferPlugin : IBotCommand2, IGitHubPluginUpdates {
 		public string Name => nameof(SelectiveLootAndTransferPlugin);
 		public Version Version => typeof(SelectiveLootAndTransferPlugin).Assembly.GetName().Version ?? throw new InvalidOperationException(nameof(Version));
-		public string RepositoryName => "Rudokhvist/Selective-Loot-and-Transfer-Plugin";
+		public string RepositoryName => "Rudokhvist/SelectiveLootAndTransferPlugin";
 
 		private static readonly char[] Separator = [','];
 
