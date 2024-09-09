@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selective-Loot-and-Transfer-Plugin", "Selective-Loot-and-Transfer-Plugin\Selective-Loot-and-Transfer-Plugin.csproj", "{E29B462C-9458-4CD1-AD44-C1940918D043}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelectiveLootAndTransferPlugin", "SelectiveLootAndTransferPlugin\SelectiveLootAndTransferPlugin.csproj", "{E29B462C-9458-4CD1-AD44-C1940918D043}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchiSteamFarm", "ArchiSteamFarm\ArchiSteamFarm\ArchiSteamFarm.csproj", "{5392E613-B602-48A0-B4C5-7B2480E587F7}"
 EndProject
