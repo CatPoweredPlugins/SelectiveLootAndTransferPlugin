@@ -51,7 +51,7 @@ jobs:
         LATEST_ASF_RELEASE: ${{ steps.asf-release.outputs.release }}
       shell: sh
       run: |
-        set -eu
+        set -eux
 
         current_version="$(git config -f .gitmodules submodule.ArchiSteamFarm.branch)"
 
