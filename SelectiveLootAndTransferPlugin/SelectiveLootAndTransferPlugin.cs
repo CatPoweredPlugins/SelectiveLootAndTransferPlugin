@@ -10,10 +10,9 @@ using ArchiSteamFarm.Storage;
 using ArchiSteamFarm.Plugins.Interfaces;
 using ArchiSteamFarm.Web.GitHub.Data;
 using ArchiSteamFarm.Localization;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using JetBrains.Annotations;
-using System.Reflection;
+using ArchiSteamFarm.Web.GitHub;
 
 
 namespace SelectiveLootAndTransferPlugin {
@@ -23,30 +22,57 @@ namespace SelectiveLootAndTransferPlugin {
 	internal sealed class SelectiveLootAndTransferPlugin : IBotCommand2, IGitHubPluginUpdates {
 		public string Name => nameof(SelectiveLootAndTransferPlugin);
 		public Version Version => typeof(SelectiveLootAndTransferPlugin).Assembly.GetName().Version ?? throw new InvalidOperationException(nameof(Version));
-		public string RepositoryName => "Rudokhvist/SelectiveLootAndTransferPlugin";
+		public string RepositoryName => "CatPoweredPlugins/SelectiveLootAndTransferPlugin";
 
 		private static readonly char[] Separator = [','];
 
-		public Task<ReleaseAsset?> GetTargetReleaseAsset(Version asfVersion, string asfVariant, Version newPluginVersion, IReadOnlyCollection<ReleaseAsset> releaseAssets) {
+		public async Task<Uri?> GetTargetReleaseURL(Version asfVersion, string asfVariant, bool asfUpdate, bool stable, bool forced) {
 			ArgumentNullException.ThrowIfNull(asfVersion);
 			ArgumentException.ThrowIfNullOrEmpty(asfVariant);
-			ArgumentNullException.ThrowIfNull(newPluginVersion);
 
-			if ((releaseAssets == null) || (releaseAssets.Count == 0)) {
-				throw new ArgumentNullException(nameof(releaseAssets));
+			if (string.IsNullOrEmpty(RepositoryName)) {
+				ASF.ArchiLogger.LogGenericError(string.Format(CultureInfo.CurrentCulture, Strings.WarningFailedWithError, nameof(RepositoryName)));
+
+				return null;
 			}
 
-			Collection<ReleaseAsset?> matches = [.. releaseAssets.Where(r => r.Name.Equals(Name + ".zip", StringComparison.OrdinalIgnoreCase))];
+			ReleaseResponse? releaseResponse = await GitHubService.GetLatestRelease(RepositoryName, stable).ConfigureAwait(false);
 
-			if (matches.Count != 1) {
-				return Task.FromResult((ReleaseAsset?) null);
+			if (releaseResponse == null) {
+				return null;
 			}
 
-			ReleaseAsset? release = matches[0];
+			Version newVersion = new(releaseResponse.Tag);
 
-			return (Version.Major == newPluginVersion.Major && Version.Minor == newPluginVersion.Minor && Version.Build == newPluginVersion.Build) || asfVersion != Assembly.GetExecutingAssembly().GetName().Version
-				? Task.FromResult(release)
-				: Task.FromResult((ReleaseAsset?) null);
+			if (!(Version.Major == newVersion.Major && Version.Minor == newVersion.Minor && Version.Build == newVersion.Build) && !(asfUpdate || forced)) {
+				ASF.ArchiLogger.LogGenericInfo(string.Format(CultureInfo.CurrentCulture, "New {0} plugin version {1} is only compatible with latest ASF version", Name, newVersion));
+				return null;
+			}
+
+
+			if (Version >= newVersion & !forced) {
+				ASF.ArchiLogger.LogGenericInfo(string.Format(CultureInfo.CurrentCulture, Strings.PluginUpdateNotFound, Name, Version, newVersion));
+
+				return null;
+			}
+
+			if (releaseResponse.Assets.Count == 0) {
+				ASF.ArchiLogger.LogGenericWarning(string.Format(CultureInfo.CurrentCulture, Strings.PluginUpdateNoAssetFound, Name, Version, newVersion));
+
+				return null;
+			}
+
+			ReleaseAsset? asset = await ((IGitHubPluginUpdates) this).GetTargetReleaseAsset(asfVersion, asfVariant, newVersion, releaseResponse.Assets).ConfigureAwait(false);
+
+			if ((asset == null) || !releaseResponse.Assets.Contains(asset)) {
+				ASF.ArchiLogger.LogGenericWarning(string.Format(CultureInfo.CurrentCulture, Strings.PluginUpdateNoAssetFound, Name, Version, newVersion));
+
+				return null;
+			}
+
+			ASF.ArchiLogger.LogGenericInfo(string.Format(CultureInfo.CurrentCulture, Strings.PluginUpdateFound, Name, Version, newVersion));
+
+			return asset.DownloadURL;
 		}
 
 		public async Task<string?> OnBotCommand(Bot bot, EAccess access, string message, string[] args, ulong steamID = 0) {
@@ -151,7 +177,7 @@ namespace SelectiveLootAndTransferPlugin {
 				}
 			}
 
-			(bool success, string message) = await bot.Actions.SendInventory(targetSteamID: targetBot.SteamID, filterFunction: item => transferTypes.Contains(item.Type)&&(sendNotMarketable||item.Marketable)).ConfigureAwait(false);
+			(bool success, string message) = await bot.Actions.SendInventory(targetSteamID: targetBot.SteamID, filterFunction: item => transferTypes.Contains(item.Type) && (sendNotMarketable || item.Marketable)).ConfigureAwait(false);
 
 			return bot.Commands.FormatBotResponse(success ? message : string.Format(CultureInfo.CurrentCulture, Strings.WarningFailedWithError, message));
 		}
@@ -179,7 +205,7 @@ namespace SelectiveLootAndTransferPlugin {
 
 					break;
 				default:
-					results = [..await Task.WhenAll(tasks).ConfigureAwait(false)];
+					results = [.. await Task.WhenAll(tasks).ConfigureAwait(false)];
 					break;
 			}
 
@@ -250,7 +276,7 @@ namespace SelectiveLootAndTransferPlugin {
 				}
 			}
 
-			(bool success, string message) = await bot.Actions.SendInventory(filterFunction: item => transferTypes.Contains(item.Type)&&(sendNotMarketable||item.Marketable)).ConfigureAwait(false);
+			(bool success, string message) = await bot.Actions.SendInventory(filterFunction: item => transferTypes.Contains(item.Type) && (sendNotMarketable || item.Marketable)).ConfigureAwait(false);
 
 			return bot.Commands.FormatBotResponse(success ? message : string.Format(CultureInfo.CurrentCulture, Strings.WarningFailedWithError, message));
 		}
