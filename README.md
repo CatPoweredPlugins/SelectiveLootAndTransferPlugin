@@ -38,8 +38,6 @@ For example, in order to send trading cards and foils from `MyBot` to `MyMain`, 
 
 `transfer# MyBot C,F MyMain`
 
-You can get support for this plugin in https://steamcommunity.com/groups/Ryzheplugins (or just use github issues).
-
 ---
 
 ![downloads](https://img.shields.io/github/downloads/Rudokhvist/SelectiveLootAndTransferPlugin/total.svg?style=social)
