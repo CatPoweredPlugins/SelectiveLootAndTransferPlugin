@@ -5,7 +5,7 @@ This plugin allows to send community inventory items of given types from bot to 
 
 ## Installation
 - this plugin is only *guaranteed* to work with ASF-generic. If you use any other variant and encounter any issues - first you are encouraged to switch to ASF-generic, and only if it does not help - report an issue.
-- download `SelectiveLootAndTransferPlugin.zip` file from [latest release](https://github.com/Rudokhvist/SelectiveLootAndTransferPlugin/releases/latest) page.
+- download `SelectiveLootAndTransferPlugin.zip` file from [latest release](https://github.com/CatPoweredPlugins/SelectiveLootAndTransferPlugin/releases/latest) page.
 - unpack downloaded .zip file to `plugins` folder inside your ASF folder, together with included folder.
 - (re)start ASF, you should get a message indicating that plugin loaded successfully. 
 
