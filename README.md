@@ -40,4 +40,4 @@ For example, in order to send trading cards and foils from `MyBot` to `MyMain`, 
 
 ---
 
-![downloads](https://img.shields.io/github/downloads/Rudokhvist/SelectiveLootAndTransferPlugin/total.svg?style=social)
+![downloads](https://img.shields.io/github/downloads/CatPoweredPlugins/SelectiveLootAndTransferPlugin/total.svg?style=social)
