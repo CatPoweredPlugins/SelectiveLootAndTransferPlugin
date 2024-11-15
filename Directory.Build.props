@@ -3,7 +3,7 @@
 
 	<PropertyGroup>
 		<PluginName>SelectiveLootAndTransferPlugin</PluginName>
-		<Version>1.0.0.2</Version>
+		<Version>1.0.0.3</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
