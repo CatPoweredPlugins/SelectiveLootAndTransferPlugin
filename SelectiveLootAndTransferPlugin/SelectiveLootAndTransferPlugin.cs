@@ -84,17 +84,17 @@ namespace SelectiveLootAndTransferPlugin {
 				"TRANSFER#" when args.Length > 2 => await ResponseTransfer(bot, access, args[1], args[2]).ConfigureAwait(false),
 				"LOOT#" when args.Length > 2 => await ResponseLoot(access, steamID, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false),
 				"LOOT#" => await ResponseLoot(bot, access, args[1]).ConfigureAwait(false),
-				"TRANSFER+" when args.Length > 4 => await ResponseTransferApp(access, steamID, args[1], args[2], args[3], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false),
+				"TRANSFER+" when args.Length > 4 => await ResponseTransferApp(access, steamID, args[1], args[2], args[3], Utilities.GetArgsAsText(args, 4, ",")).ConfigureAwait(false),
 				"TRANSFER+" when args.Length > 3 => await ResponseTransferApp(bot, access, args[1], args[2], args[3]).ConfigureAwait(false),
-				"LOOT+" when args.Length > 3 => await ResponseLootApp(access, steamID, args[1], args[2], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false),
+				"LOOT+" when args.Length > 3 => await ResponseLootApp(access, steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false),
 				"LOOT+" when args.Length > 2 => await ResponseLootApp(bot, access, args[1], args[2]).ConfigureAwait(false),
 				"TRANSFERM" when args.Length > 3 => await ResponseTransfer(access, steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ","), false).ConfigureAwait(false),
 				"TRANSFERM" when args.Length > 2 => await ResponseTransfer(bot, access, args[1], args[2], false).ConfigureAwait(false),
 				"LOOTM" when args.Length > 2 => await ResponseLoot(access, steamID, args[1], Utilities.GetArgsAsText(args, 2, ","), false).ConfigureAwait(false),
 				"LOOTM" => await ResponseLoot(bot, access, args[1], false).ConfigureAwait(false),
-				"TRANSFERM+" when args.Length > 4 => await ResponseTransferApp(access, steamID, args[1], args[2], args[3], Utilities.GetArgsAsText(args, 3, ","), false).ConfigureAwait(false),
+				"TRANSFERM+" when args.Length > 4 => await ResponseTransferApp(access, steamID, args[1], args[2], args[3], Utilities.GetArgsAsText(args, 4, ","), false).ConfigureAwait(false),
 				"TRANSFERM+" when args.Length > 3 => await ResponseTransferApp(bot, access, args[1], args[2], args[3], false).ConfigureAwait(false),
-				"LOOTM+" when args.Length > 3 => await ResponseLootApp(access, steamID, args[1], args[2], Utilities.GetArgsAsText(args, 2, ","), false).ConfigureAwait(false),
+				"LOOTM+" when args.Length > 3 => await ResponseLootApp(access, steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ","), false).ConfigureAwait(false),
 				"LOOTM+" when args.Length > 2 => await ResponseLootApp(bot, access, args[1], args[2], false).ConfigureAwait(false),
 				_ => null,
 			};
@@ -262,7 +262,7 @@ namespace SelectiveLootAndTransferPlugin {
 				return bot.Commands.FormatBotResponse(Strings.BotSendingTradeToYourself);
 			}
 
-			string[] appIDTexts = mode.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
+			string[] appIDTexts = appIDs.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
 
 			if (appIDTexts.Length == 0) {
 				return bot.Commands.FormatBotResponse(string.Format(CultureInfo.CurrentCulture, Strings.ErrorIsEmpty, nameof(appIDTexts)));
