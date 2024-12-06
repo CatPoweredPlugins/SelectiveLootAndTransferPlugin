@@ -147,7 +147,7 @@ namespace SelectiveLootAndTransferPlugin {
 				switch (singleMode.ToUpper(CultureInfo.CurrentCulture)) {
 					case "A":
 					case "ALL":
-						foreach (EAssetType type in (EAssetType[]) Enum.GetValues(typeof(EAssetType))) {
+						foreach (EAssetType type in (EAssetType[]) Enum.GetValues<EAssetType>()) {
 							transferTypes.Add(type);
 						}
 
@@ -290,7 +290,7 @@ namespace SelectiveLootAndTransferPlugin {
 				switch (singleMode.ToUpper(CultureInfo.CurrentCulture)) {
 					case "A":
 					case "ALL":
-						foreach (EAssetType type in (EAssetType[]) Enum.GetValues(typeof(EAssetType))) {
+						foreach (EAssetType type in (EAssetType[]) Enum.GetValues<EAssetType>()) {
 							transferTypes.Add(type);
 						}
 
@@ -407,7 +407,7 @@ namespace SelectiveLootAndTransferPlugin {
 				switch (singleMode.ToUpper(CultureInfo.CurrentCulture)) {
 					case "A":
 					case "ALL":
-						foreach (EAssetType type in (EAssetType[]) Enum.GetValues(typeof(EAssetType))) {
+						foreach (EAssetType type in (EAssetType[]) Enum.GetValues<EAssetType>()) {
 							transferTypes.Add(type);
 						}
 
@@ -524,7 +524,7 @@ namespace SelectiveLootAndTransferPlugin {
 				switch (singleMode.ToUpper(CultureInfo.CurrentCulture)) {
 					case "A":
 					case "ALL":
-						foreach (EAssetType type in (EAssetType[]) Enum.GetValues(typeof(EAssetType))) {
+						foreach (EAssetType type in (EAssetType[]) Enum.GetValues<EAssetType>()) {
 							transferTypes.Add(type);
 						}
 
