@@ -80,6 +80,7 @@ namespace SelectiveLootAndTransferPlugin {
 			}
 
 			return args[0].ToUpperInvariant() switch {
+				"COMMANDS" => "\n" + Name + "\n\nTRANSFER# [<Bots>] <Modes> <Bot>\nLOOT# [<Bots>] <Modes>\nTRANSFER+ [<Bots>] <Modes> <Appids> <Bot>\nLOOT+ [<Bots>] <Modes> <Appids>\nTRANSFERM [<Bots>] <Modes> <Bot>\nLOOTM [<Bots>] <Modes>\nTRANSFERM+ [<Bots>] <Modes> <Appids> <Bot>\nLOOTM+ [<Bots>] <Modes> <Appids>\n\n---------------------",
 				"TRANSFER#" when args.Length > 3 => await ResponseTransfer(access, steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false),
 				"TRANSFER#" when args.Length > 2 => await ResponseTransfer(bot, access, args[1], args[2]).ConfigureAwait(false),
 				"LOOT#" when args.Length > 2 => await ResponseLoot(access, steamID, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false),
